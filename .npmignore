@@ -1,0 +1,9 @@
+lib/
+test/
+dist/test/
+.idea/
+node_modules/
+.dockerignore
+Dockerfile
+entrypoint.sh
+*.log

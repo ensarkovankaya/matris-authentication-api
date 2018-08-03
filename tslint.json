@@ -1,0 +1,19 @@
+{
+  "defaultSeverity": "error",
+  "extends": "./node_modules/tslint/lib/configs/recommended",
+  "rules": {
+    "max-classes-per-file": [false],
+    "object-literal-sort-keys": false,
+    "trailing-comma": false,
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "quotemark": false,
+    "no-console": false,
+    "variable-name": false
+  },
+  "linterOptions": {
+    "exclude": [
+      "**/*.spec.ts",
+      "node_modules/"
+    ]
+  }
+}

@@ -17,3 +17,11 @@ export class UnknownClientError extends Error {
 export class UnexpectedResponse extends Error {
     public name = 'UnexpectedResponse';
 }
+
+export class TokenExpired extends Error {
+    public name = 'TokenExpired';
+}
+
+export class InvalidToken extends Error {
+    public name = 'InvalidToken';
+}

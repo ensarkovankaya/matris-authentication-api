@@ -8,7 +8,7 @@ import { BaseService } from './base.service';
 
 export class AuthenticationService extends BaseService {
 
-    public url: string;
+    public baseURL: string;
     public client: IHttpClientModel;
     public headers: {[key: string]: string};
 
@@ -19,15 +19,15 @@ export class AuthenticationService extends BaseService {
             'Accept': 'application/json'
         };
         this.client = options.client || new HttpClient();
-        this.url = options.url || '';
+        this.baseURL = options.baseURL || '';
     }
 
     public configure(options: IOptions) {
         if (options.logger) {
             this.logger = options.logger;
         }
-        if (options.url) {
-            this.url = options.url;
+        if (options.baseURL) {
+            this.baseURL = options.baseURL;
         }
         if (options.client) {
             this.client = options.client;
@@ -42,7 +42,7 @@ export class AuthenticationService extends BaseService {
         await new PasswordInput(email, password).validate();
         try {
             const response = await this.client.request<IAPIResponse<string>>({
-                url: this.url,
+                url: this.appendPath('password'),
                 method: 'POST',
                 headers: this.headers,
                 data: {email, password}
@@ -67,5 +67,16 @@ export class AuthenticationService extends BaseService {
             }
             throw e;
         }
+    }
+
+    /**
+     * Appends path to base url.
+     * @param path: Endpoint path
+     */
+    private appendPath(path: string): string {
+        if (this.baseURL.endsWith('/')) {
+            return `${this.baseURL}${path}`;
+        }
+        return `${this.baseURL}/${path}`;
     }
 }

@@ -22,6 +22,14 @@ describe('E2E', () => {
         expect(token.length).to.be.gte(150);
     });
 
+    it('should return token with expiresIn', async () => {
+        const service = new AuthenticationService({baseURL: endpoint});
+        const user = database.one(d => d.deleted === false && d.active === true);
+        const token = await service.password(user.email, user.email, 3600);
+        expect(token).to.be.a('string');
+        expect(token.length).to.be.gte(150);
+    });
+
     it('should raise UserNotFound for not existing user', async () => {
         try {
             const service = new AuthenticationService({baseURL: endpoint});

@@ -20,7 +20,7 @@ describe('Unit -> Services -> AuthenticationService', () => {
 
         it('should initialize with default options', async () => {
             const service = new AuthenticationService();
-            expect(service.url).to.be.eq('');
+            expect(service.baseURL).to.be.eq('');
             expect(service.client).to.be.an('object');
             expect(service.client).to.be.instanceof(HttpClient);
             expect(service.logger).to.be.eq(undefined);
@@ -35,12 +35,12 @@ describe('Unit -> Services -> AuthenticationService', () => {
             class MockClient {
             }
             const service = new AuthenticationService({
-                url: 'http://localhost',
+                baseURL: 'http://localhost',
                 client: new MockClient() as any,
                 logger: console,
                 headers: {key: 'value'}
             });
-            expect(service.url).to.be.eq('http://localhost');
+            expect(service.baseURL).to.be.eq('http://localhost');
             expect(service.client).to.be.an('object');
             expect(service.client).to.be.instanceof(MockClient);
             expect(service.logger).to.be.eq(console);
@@ -69,7 +69,7 @@ describe('Unit -> Services -> AuthenticationService', () => {
                 }
 
                 const service = new AuthenticationService({
-                    url: 'http://localhost',
+                    baseURL: 'http://localhost',
                     headers: {'Authorization': 'Basic username:password'},
                     client: new MockClient() as any
                 });
@@ -80,7 +80,7 @@ describe('Unit -> Services -> AuthenticationService', () => {
                 expect(e.method).to.be.eq('request');
                 expect(e.args).to.be.an('object');
                 expect(e.args).to.be.deep.eq({
-                    url: 'http://localhost',
+                    url: 'http://localhost/password',
                     method: 'POST',
                     headers: {'Authorization': 'Basic username:password'},
                     data: {email: 'mail@mail.com', password: '12345678'}
@@ -112,7 +112,7 @@ describe('Unit -> Services -> AuthenticationService', () => {
                 }
 
                 const service = new AuthenticationService({
-                    url: 'http://localhost',
+                    baseURL: 'http://localhost',
                     headers: {'Authorization': 'Basic username:password'},
                     client: new MockClient() as any
                 });
@@ -147,7 +147,7 @@ describe('Unit -> Services -> AuthenticationService', () => {
                 }
 
                 const service = new AuthenticationService({
-                    url: 'http://localhost',
+                    baseURL: 'http://localhost',
                     headers: {'Authorization': 'Basic username:password'},
                     client: new MockClient() as any
                 });
@@ -182,7 +182,7 @@ describe('Unit -> Services -> AuthenticationService', () => {
                 }
 
                 const service = new AuthenticationService({
-                    url: 'http://localhost',
+                    baseURL: 'http://localhost',
                     headers: {'Authorization': 'Basic username:password'},
                     client: new MockClient() as any
                 });
@@ -207,7 +207,7 @@ describe('Unit -> Services -> AuthenticationService', () => {
                 }
 
                 const service = new AuthenticationService({
-                    url: 'http://localhost',
+                    baseURL: 'http://localhost',
                     headers: {'Authorization': 'Basic username:password'},
                     client: new MockClient() as any
                 });

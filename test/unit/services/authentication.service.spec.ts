@@ -59,7 +59,7 @@ describe('Unit -> Services -> AuthenticationService', () => {
             }
         });
 
-        it('should call "request" from client', async () => {
+        it('should call "request" from client email and password', async () => {
             try {
                 class MockClient {
 
@@ -84,6 +84,35 @@ describe('Unit -> Services -> AuthenticationService', () => {
                     method: 'POST',
                     headers: {'Authorization': 'Basic username:password'},
                     data: {email: 'mail@mail.com', password: '12345678'}
+                });
+            }
+        });
+
+        it('should call "request" from client email, password and expiresIn', async () => {
+            try {
+                class MockClient {
+
+                    public request(config) {
+                        throw new MethodCalled('request', config);
+                    }
+                }
+
+                const service = new AuthenticationService({
+                    baseURL: 'http://localhost',
+                    headers: {'Authorization': 'Basic username:password'},
+                    client: new MockClient() as any
+                });
+                await service.password('mail@mail.com', '12345678', 3600);
+                throw new ShouldNotSucceed();
+            } catch (e) {
+                expect(e.name).to.be.eq('MethodCalled');
+                expect(e.method).to.be.eq('request');
+                expect(e.args).to.be.an('object');
+                expect(e.args).to.be.deep.eq({
+                    url: 'http://localhost/password',
+                    method: 'POST',
+                    headers: {'Authorization': 'Basic username:password'},
+                    data: {email: 'mail@mail.com', password: '12345678', expiresIn: 3600}
                 });
             }
         });

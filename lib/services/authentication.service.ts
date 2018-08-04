@@ -37,15 +37,15 @@ export class AuthenticationService extends BaseService {
         }
     }
 
-    public async password(email: string, password: string): Promise<string> {
+    public async password(email: string, password: string, expiresIn?: number): Promise<string> {
         this.logDebug('Password', {email, password});
-        await new PasswordInput(email, password).validate();
+        await new PasswordInput(email, password, expiresIn).validate();
         try {
             const response = await this.client.request<IAPIResponse<string>>({
                 url: this.appendPath('password'),
                 method: 'POST',
                 headers: this.headers,
-                data: {email, password}
+                data: expiresIn !== undefined ? {email, password, expiresIn} : {email, password}
             });
             this.logDebug('Password', {response});
             if (!response.data || !response.data.data || typeof response.data.data !== 'string') {

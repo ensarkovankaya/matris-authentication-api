@@ -79,7 +79,15 @@ export class AuthenticationService extends BaseService {
         }
     }
 
-    public async verify(token: string) {
+    /**
+     * Verifies given jwt token. If valid returns decoded token.
+     * If token expired raise TokenExpired error.
+     * If token not valid raise InvalidToken error.
+     *
+     * @param {string} token: Json web token
+     * @returns {DecodedToken}
+     */
+    public async verify(token: string): Promise<DecodedToken> {
         try {
             this.logDebug('Verifing token', {token});
             const response = await this.client.request<IAPIResponse<IDecodedTokenModel>>({
@@ -90,17 +98,19 @@ export class AuthenticationService extends BaseService {
             });
             this.logDebug('Client responded with 200', {response});
 
+            let decoded: DecodedToken;
+
             // Validate response data is valid
             if (!response.data || !response.data.data || typeof response.data.data !== 'object') {
                 throw new UnexpectedResponse();
             } else {
                 try {
-                    await new DecodedToken(response.data.data).validate();
+                    decoded = await new DecodedToken(response.data.data).validate();
                 } catch (e) {
                     throw new UnexpectedResponse();
                 }
             }
-            return response.data.data;
+            return decoded;
         } catch (e) {
             this.logError('Token validation failed', e, {token});
             if (e.name === 'HttpClientError') {
